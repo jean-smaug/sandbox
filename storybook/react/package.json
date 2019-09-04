@@ -1,8 +1,11 @@
 {
+  "name": "@smaug/storybook-react",
+  "version": "0.0.1",
   "dependencies": {
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
   },
+  "main": "index.js",
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@storybook/addon-actions": "^5.1.11",
@@ -13,6 +16,7 @@
     "parcel-bundler": "1.12.3"
   },
   "scripts": {
+    "dev": "parcel index.html",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   }

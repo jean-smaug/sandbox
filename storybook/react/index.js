@@ -1,5 +1,5 @@
 import Title from './components/Title'
 
-export default {
+module.exports = {
     Title
 }

@@ -1,8 +1,10 @@
 import React from 'react'
 
+import css from './index.scss'
+
 const Title = ({ children }) => {
     return (
-        <h1>
+        <h1 className={css.Title}>
             {children}
         </h1>
     )

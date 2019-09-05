@@ -161,6 +161,111 @@
       },
       "arity": "optional",
       "isUnique": false
+    },
+    {
+      "stepType": "CreateModel",
+      "name": "Category",
+      "embedded": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Post",
+      "name": "category",
+      "type": {
+        "Relation": {
+          "to": "Category",
+          "to_fields": [
+            "id"
+          ],
+          "name": "CategoryToPost",
+          "on_delete": "None"
+        }
+      },
+      "arity": "optional",
+      "isUnique": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Category",
+      "name": "id",
+      "type": {
+        "Base": "String"
+      },
+      "arity": "required",
+      "isUnique": false,
+      "id": {
+        "strategy": "Auto",
+        "sequence": null
+      },
+      "default": {
+        "Expression": [
+          "cuid",
+          "String",
+          []
+        ]
+      }
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Category",
+      "name": "name",
+      "type": {
+        "Base": "String"
+      },
+      "arity": "required",
+      "isUnique": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Category",
+      "name": "posts",
+      "type": {
+        "Relation": {
+          "to": "Post",
+          "to_fields": [],
+          "name": "CategoryToPost",
+          "on_delete": "None"
+        }
+      },
+      "arity": "list",
+      "isUnique": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Post",
+      "name": "categories",
+      "type": {
+        "Relation": {
+          "to": "Category",
+          "to_fields": [
+            "id"
+          ],
+          "name": "CategoryToPost",
+          "on_delete": "None"
+        }
+      },
+      "arity": "list",
+      "isUnique": false
+    },
+    {
+      "stepType": "DeleteField",
+      "model": "Post",
+      "name": "category"
+    },
+    {
+      "stepType": "UpdateField",
+      "model": "Category",
+      "name": "posts",
+      "type": {
+        "Relation": {
+          "to": "Post",
+          "to_fields": [
+            "id"
+          ],
+          "name": "CategoryToPost",
+          "on_delete": "None"
+        }
+      }
     }
   ]
 }

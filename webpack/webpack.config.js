@@ -4,10 +4,11 @@ module.exports = {
   entry: path.join(__dirname, 'src', 'index'),
   watch: true,
   output: {
-    path: path.join(__dirname, 'dist', 'index'),
-    publicPath: '/dist/',
+    path: path.join(__dirname, 'dist'),
     filename: "bundle.js",
-    chunkFilename: '[name].js'
+    chunkFilename: '[name].js',
+    libraryTarget: 'commonjs2',
+    library: '@smaug/webpack'
   },
   module: {
     rules: [{

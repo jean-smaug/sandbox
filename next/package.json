@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@smaug/storybook-react": "/home/maxime/Localdev/sandbox/storybook/react",
+    "@smaug/webpack": "/home/maxime/Localdev/sandbox/webpack",
     "next": "^9.0.5",
     "next-transpile-modules": "^2.3.1",
     "react": "^16.9.0",

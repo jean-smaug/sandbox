@@ -1,9 +1,13 @@
 import React from 'react'
 
+import style from './index.scss'
+
+console.log('csdvdsbfdsfdsdsd', style)
+
 class Button extends React.Component {
     render() {
         return (
-            <button>{this.props.children}</button>
+            <button className={style.custom}>{this.props.children}</button>
         )
     }
 }

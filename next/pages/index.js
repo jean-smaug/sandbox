@@ -1,5 +1,7 @@
 import css from "../styles/index.scss"
 import { Title } from '@smaug/storybook-react'
+
+import "@smaug/webpack/dist/main.css";
 import Button from '@smaug/webpack'
 
 function Home() {

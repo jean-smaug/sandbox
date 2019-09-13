@@ -1,0 +1,13 @@
+{
+  "name": "dredd",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "dredd": "12.0.7",
+    "snowboard": "3.4.0"
+  }
+}

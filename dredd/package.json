@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "docs": "snowboard html -o index.html apiary.apib"
+  },
   "dependencies": {
     "express": "^4.17.1"
   },

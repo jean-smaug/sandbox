@@ -2,27 +2,28 @@ FORMAT: 1A
 
 # Bogass
 
-API de l'application Bogass, application ne faisant rien
+API de l'application Bogass, l'application des bogass 
 
-
-## Authentication
-Actuellement l'API n'intègre pas de système d'authentification
-
-# Group Files
-
-Récuperer les fichiers
-
-## File [/files/{uuid}]
-
-+ Parameters
-    + uuid (number) - ID of the Question in the form of an integer
-
-### Delete [DELETE]
-
-+ Response 204
-
-## Raw file [/files/{uuid}/raw]
-
-### Fichier [GET]
+# GET /
 
 + Response 200 (application/json; charset=utf-8)
+    
+    + Body
+
+            { 
+                "message": "Hello World!"
+            }
+
+# GET /bogass/{id}
+
++ Parameters
+    + id: 1 (number) - Identifiant du bogass
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Body
+
+            {
+                "id": 1,
+                "name": "Jean Smaug"
+            } 

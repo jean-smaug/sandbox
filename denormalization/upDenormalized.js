@@ -1,6 +1,6 @@
 const sqlite3 = require("sqlite3").verbose();
-const faker = require('faker');
 const db = new sqlite3.Database("db.sqlite");
+const faker = require('faker');
 
 const NUMBER_OF_BARS = 10
 const NUMBER_OF_WINES = 100
@@ -50,7 +50,7 @@ db.serialize(() => {
         CREATE TABLE IF NOT EXISTS bars (
             id NUMBER PRIMARY KEY,
             name STRING,
-            wines_ids STRING
+            wines_ids JSON
         );
     `)
 
@@ -59,13 +59,12 @@ db.serialize(() => {
         Array(NUMBER_OF_BARS).fill().forEach(wine => {
             db.run(`
                 INSERT INTO bars (id, name, wines_ids) 
-                VALUES ($id, $name, json($winesIds))
+                VALUES ($id, $name, json_array($winesIds))
             `, {
                 $id: faker.random.uuid(),
                 $name: faker.lorem.words(),
-                $winesIds: JSON.stringify(getRandom(ids, Math.round(Math.random()*(NUMBER_OF_WINES/2))))
+                $winesIds: getRandom(ids, Math.round(Math.random()*(NUMBER_OF_WINES/2)))
             })
         })
     })
-    
 })

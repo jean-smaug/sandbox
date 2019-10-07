@@ -1,0 +1,10 @@
+{
+    "sqltools.connections": [
+        {
+            "askForPassword": true,
+            "database": "./denormalization/db.sqlite",
+            "dialect": "SQLite",
+            "name": "denormalization"
+        }
+    ]
+}

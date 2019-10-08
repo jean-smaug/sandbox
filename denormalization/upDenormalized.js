@@ -59,11 +59,11 @@ db.serialize(() => {
         Array(NUMBER_OF_BARS).fill().forEach(wine => {
             db.run(`
                 INSERT INTO bars (id, name, wines_ids) 
-                VALUES ($id, $name, json_array($winesIds))
+                VALUES ($id, $name, json($winesIds))
             `, {
                 $id: faker.random.uuid(),
                 $name: faker.lorem.words(),
-                $winesIds: getRandom(ids, Math.round(Math.random()*(NUMBER_OF_WINES/2)))
+                $winesIds: JSON.stringify(getRandom(ids, Math.round(Math.random()*(NUMBER_OF_WINES/2))).map(i => i))
             })
         })
     })

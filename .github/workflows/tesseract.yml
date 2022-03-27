@@ -1,100 +1,40 @@
-name: cmake
+name: 🧊 Tesseract
 # cmake build of tesseract and training tools on ubuntu and macOS homebrew using Ninja.
 # test command line version of tesseract. run basicapitest.
 on:
   #push:
   workflow_dispatch:
+  pull_request:
 
 jobs:
-  basictests:
-    name: Create Tesseract build
+  build-tesseract:
     runs-on: ubuntu-20.04
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     config:
-    #       - {
-    #           name: ubuntu-20.04-clang-10-cmake,
-    #           os: ubuntu-20.04,
-    #           cxx: clang++-10,
-    #         }
-    #       - { name: ubuntu-20.04-gcc-10-cmake, os: ubuntu-20.04, cxx: g++-10 }
 
     steps:
-      - name: Install compilers on Linux
-        run: |
-          sudo apt-get install clang++-10 -y
-
-      - name: Install dependencies on Linux
-        run: |
-          sudo apt-get install autoconf libleptonica-dev -y
-          sudo apt-get install libarchive-dev libcurl4-openssl-dev -y
-          sudo apt-get install libpango1.0-dev -y
-          sudo apt-get install cabextract -y
-          sudo apt-get install ninja-build -y
-          cmake --version
-        if: runner.os == 'Linux'
-
-      - name: Checkout Source
+      - name: Checkout Tesseract 5.1.0
         uses: actions/checkout@v2
         with:
           repository: tesseract-ocr/tesseract
+          ref: 5.1.0
+          path: tesseract
 
-      - name: Configure Tesseract (Linux)
+      - name: Install dependencies
         run: |
-          mkdir build
-          mkdir inst
-          cmake \
-            -S . \
-            -B build \
-            -G Ninja \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DOPENMP_BUILD=OFF \
-            -DCMAKE_CXX_COMPILER=clang++-10 \
-            -DCMAKE_INSTALL_PREFIX:PATH=inst
+          sudo apt-get install libleptonica-dev -y
 
       - name: Build Tesseract
         run: |
-          cmake --build build --config Release --target install
-      - name: Display Tesseract Version
-        run: |
-          build/inst/bin/tesseract -v
+          cd tesseract
+          ./autogen.sh
+          mkdir -p bin/release
+          cd bin/release
+          ../../configure --disable-openmp --disable-shared 'CXXFLAGS=-g -O2 -fno-math-errno -Wall -Wextra -Wpedantic'
+          make
+          echo "Print version"
+          ./tesseract -v
+          strip ./tesseract
 
       - uses: actions/upload-artifact@v3
         with:
           name: tesseract
-          path: build
-      # - name: Display Training Tools Version
-      #   run: |
-      #     build/inst/bin/lstmtraining -v
-      #     build/inst/bin/text2image -v
-      # - name: Download fonts, tessdata and langdata required for tests
-      #   run: |
-      #     git clone https://github.com/egorpugin/tessdata tessdata_unittest
-      #     cp tessdata_unittest/fonts/* test/testing/
-      #     mv tessdata_unittest/* ../
-      # - name: List languages in different tessdata-dir
-      #   run: |
-      #     build/inst/bin/tesseract  --list-langs --tessdata-dir ../tessdata
-      #     build/inst/bin/tesseract  --list-langs --tessdata-dir ../tessdata_best
-      #     build/inst/bin/tesseract  --list-langs --tessdata-dir ../tessdata_fast
-      # - name: Run Tesseract on test images in different languages
-      #   run: |
-      #     build/inst/bin/tesseract test/testing/phototest.tif - --oem 1  --tessdata-dir ../tessdata
-      #     build/inst/bin/tesseract test/testing/raaj.tif - -l hin --oem 1   --tessdata-dir ../tessdata
-      #     build/inst/bin/tesseract test/testing/viet.tif - -l vie --oem 1   --tessdata-dir ../tessdata
-      #     build/inst/bin/tesseract test/testing/hebrew.png - -l heb --oem 1   --tessdata-dir ../tessdata
-      #     build/inst/bin/tesseract test/testing/eurotext.tif - -l fra --oem 1 --tessdata-dir ../tessdata_best
-      #     build/inst/bin/tesseract test/testing/arabic.tif - -l ara --oem 1 --psm 6  --tessdata-dir ../tessdata
-      # - name: Build and run basicapitest (Linux)
-      #   run: |
-      #     export "PKG_CONFIG_PATH=$GITHUB_WORKSPACE/build/inst/lib/pkgconfig/:$PKG_CONFIG_PATH"
-      #     cd test
-      #     ${{ matrix.config.cxx }} -o basicapitest testing/basicapitest.cpp "-I$GITHUB_WORKSPACE/build/inst/include" "-L$GITHUB_WORKSPACE/build/inst/lib" $(pkg-config --cflags --libs tesseract lept libarchive libcurl) -pthread -std=c++11
-      #     ./basicapitest
-
-      # - name: Display Compiler Version
-      #   run: |
-      #     ${{ matrix.config.cxx }} --version
-      #     git log -3 --pretty=format:'%h %ad %s | %an'
-      #   if: always()
+          path: tesseract/bin/release/tesseract

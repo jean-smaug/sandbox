@@ -2,9 +2,7 @@ name: 🧊 Tesseract
 # cmake build of tesseract and training tools on ubuntu and macOS homebrew using Ninja.
 # test command line version of tesseract. run basicapitest.
 on:
-  #push:
   workflow_dispatch:
-  pull_request:
 
 jobs:
   build-tesseract:
@@ -32,9 +30,13 @@ jobs:
           make
           echo "Print version"
           ./tesseract -v
-          strip ./tesseract
 
       - uses: actions/upload-artifact@v3
         with:
           name: tesseract
           path: tesseract/bin/release/tesseract
+
+      - name: Test without leptonica
+        run: |
+          sudo apt-get remove libleptonica-dev -y
+          ./bin/release/tesseract -v

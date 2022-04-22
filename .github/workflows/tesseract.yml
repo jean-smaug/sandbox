@@ -81,7 +81,7 @@ jobs:
       - name: Compile
         run: |
           ./autogen.sh \
-          && .configure \
+          && ./configure \
           && make
 
       - name: Build

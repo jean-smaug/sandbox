@@ -101,7 +101,9 @@ jobs:
           path: build
 
       - name: Tests tesseract
-        run: ./build/tesseract -v
+        run: |
+          chmod +x ./build/tesseract \
+          && ./build/tesseract -v
 ####
 
 # https://stackoverflow.com/a/56342994

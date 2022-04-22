@@ -60,24 +60,6 @@ jobs:
           libleptonica-dev \
           -y
 
-      - name: Install tesseract
-        run: sudo apt install tesseract-ocr -y
-
-      - name: LS lib
-        run: ls -R /usr/lib
-
-      - name: LS lib32
-        run: ls -R /usr/lib32
-
-      - name: LS libexec
-        run: ls -R /usr/libexec
-
-      - name: LS libx32
-        run: ls -R /usr/libx32
-
-      - name: LS lib64
-        run: ls -R /usr/lib64
-
       - name: Compile
         run: |
           ./autogen.sh \
@@ -85,6 +67,9 @@ jobs:
           && make \
           && sudo make install \
           && sudo ldconfig
+
+      - name: LS lib
+        run: ls -R /usr/lib
 
       - name: Build
         run: |

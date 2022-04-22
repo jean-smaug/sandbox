@@ -1,42 +1,147 @@
 name: 🧊 Tesseract
-# cmake build of tesseract and training tools on ubuntu and macOS homebrew using Ninja.
-# test command line version of tesseract. run basicapitest.
+
+# This doesn't work
+# Need to try the following
+# `tesseract` folder comes from this project
+# https://github.com/bweigel/aws-lambda-tesseract-layer/blob/master/Dockerfile.al2
+
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        required: false
+        description: Tesseract reference
+        default: 5.1.0
 
 jobs:
   build-tesseract:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Checkout Tesseract 5.1.0
+      - name: Checkout
         uses: actions/checkout@v2
         with:
           repository: tesseract-ocr/tesseract
-          ref: 5.1.0
-          path: tesseract
+          ref: ${{ github.event.inputs.version }}
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get install libleptonica-dev -y
+      - run: ls
 
-      - name: Build Tesseract
+      - name: Install general dependencies
         run: |
-          cd tesseract
-          ./autogen.sh
-          mkdir -p bin/release
-          cd bin/release
-          ../../configure --disable-openmp --disable-shared 'CXXFLAGS=-g -O2 -fno-math-errno -Wall -Wextra -Wpedantic'
-          make
-          echo "Print version"
-          ./tesseract -v
+          sudo apt install \
+          wget \
+          git \
+          build-essential \
+          curl \
+          autoconf \
+          automake \
+          libtool \
+          pkg-config \
+          apt-transport-https \
+          ppa-purge \
+          zsh \
+          screen \
+          byobu \
+          parallel \
+          iperf3 \
+          iotop \
+          atop \
+          nethogs \
+          htop \
+          software-properties-common \
+          -y
+
+      - name: Install general dependencies
+        run: |
+          sudo apt install \
+          libicu-dev \
+          libpango1.0-dev \
+          libcairo2-dev \
+          libleptonica-dev \
+          -y
+
+      - name: Install tesseract
+        run: sudo apt install tesseract-ocr -y
+
+      - name: LS lib
+        run: ls -R /usr/lib
+
+      - name: LS lib32
+        run: ls -R /usr/lib32
+
+      - name: LS libexec
+        run: ls -R /usr/libexec
+
+      - name: LS libx32
+        run: ls -R /usr/libx32
+
+      - name: LS lib64
+        run: ls -R /usr/lib64
+
+      - name: Compile
+        run: |
+          ./autogen.sh \
+          && .configure \
+          && make
+
+      - name: Build
+        run: |
+          mkdir build &&
+          cp /usr/lib/x86_64-linux-gnu/liblept.so.5 ./build/ &&
+          cp /usr/lib/x86_64-linux-gnu/libgomp.so.1 ./build/ &&
+          cp /usr/lib/x86_64-linux-gnu/libwebp.so.6 ./build/ &&
+          cp /usr/lib/x86_64-linux-gnu/libpng16.so.16 ./build/ &&
+          cp /usr/lib/x86_64-linux-gnu/libjpeg.so.8 ./build/ &&
+          cp /usr/lib/x86_64-linux-gnu/libjbig.so ./build/ &&
+          cp .libs/tesseract ./build/
 
       - uses: actions/upload-artifact@v3
         with:
           name: tesseract
-          path: tesseract/bin/release/tesseract
+          path: build
 
-      - name: Test without leptonica
-        run: |
-          sudo apt-get remove libleptonica-dev -y
-          ./bin/release/tesseract -v
+      - name: Tests tesseract
+        run: ./build/tesseract -v
+####
+
+# https://stackoverflow.com/a/56342994
+# - name: Compile
+#   run: |
+#     ./autogen.sh \
+#     && mkdir build \
+#     && cd build \
+#     && ../configure --enable-static LDFLAGS='-static -static-libgcc -static-libstdc++' --disable-shared \
+#     && make
+
+# - run: ls build
+# - name: Checkout Tesseract 5.1.0
+#   uses: actions/checkout@v2
+#   with:
+#     repository: tesseract-ocr/tesseract
+#     ref: 5.1.0
+#     path: tesseract
+
+# - name: Install dependencies
+#   run: |
+#     sudo apt-get install libleptonica-dev -y
+
+# - name: Build Tesseract
+#   run: |
+#     cd tesseract
+#     ./autogen.sh
+#     mkdir -p bin/release
+#     cd bin/release
+#     ../../configure --disable-openmp --disable-shared 'CXXFLAGS=-g -O2 -fno-math-errno -Wall -Wextra -Wpedantic'
+#     make
+#     echo "Print version"
+#     ./tesseract -v
+
+# - uses: actions/upload-artifact@v3
+#   with:
+#     name: tesseract
+#     path: tesseract/bin/release/tesseract
+
+# - name: Test without leptonica
+#   run: |
+#     sudo apt-get remove libleptonica-dev -y
+#     ./bin/release/tesseract -v

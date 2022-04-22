@@ -82,7 +82,9 @@ jobs:
         run: |
           ./autogen.sh \
           && ./configure \
-          && make
+          && make \
+          && sudo make install \
+          && sudo ldconfig
 
       - name: Build
         run: |
@@ -93,6 +95,7 @@ jobs:
           cp /usr/lib/x86_64-linux-gnu/libpng16.so.16 ./build/ &&
           cp /usr/lib/x86_64-linux-gnu/libjpeg.so.8 ./build/ &&
           cp /usr/lib/x86_64-linux-gnu/libjbig.so ./build/ &&
+          cp /usr/lib/x86_64-linux-gnu/libtesseract.so.5 ./build/ &&
           cp .libs/tesseract ./build/
 
       - uses: actions/upload-artifact@v3
@@ -101,9 +104,7 @@ jobs:
           path: build
 
       - name: Tests tesseract
-        run: |
-          chmod +x ./build/tesseract \
-          && ./build/tesseract -v
+        run: ./build/tesseract -v
 ####
 
 # https://stackoverflow.com/a/56342994

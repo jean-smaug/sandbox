@@ -8,7 +8,7 @@
     "docs": "snowboard html -o index.html apiary.apib"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.3"
   },
   "devDependencies": {
     "dredd": "12.0.7",
